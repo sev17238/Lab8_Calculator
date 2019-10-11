@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400');
+
+body{
+    background-color: rgb(165, 165, 165)
+}
+.container{
+    margin-top: 100px;
+    margin-bottom: 25px;
+    left: 50%;
+    position: absolute;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(36, 36, 90);
+    height: 500px;
+    width: 350px;
+    z-index:-1000;
+    border-left: 5px rgb(20, 20, 51) solid;
+    border-right: 5px rgb(20, 20, 51) solid;
+    border-top: 10px rgb(28, 28, 70) solid;
+    border-bottom: 15px rgb(28, 28, 70) solid;
+    border-radius: 10px;
+}
+
+.display{
+    position: relative;
+    width: 81%;
+    margin-top: 70px;
+    margin-right: 20px;
+    margin-left: 20px;
+    height: 65px;
+
+    align-self: center;
+    background-color:  rgb(118, 145, 124);
+
+    font-size: 55px;
+    font-weight: 500;    
+    line-height: 67px;
+    padding: 10px;
+    text-align: right;
+    color: rgb(37, 37, 37);
+    font-family: 'Roboto', sans-serif;
+    border-right: 2px solid rgb(20, 20, 51);
+    border-left: 2px solid rgb(20, 20, 51);
+    border-top: 4px solid rgb(27, 27, 70);
+    border-bottom: none;
+
+    border-radius: 5px;
+
+}
+
+.calcName{
+    position: absolute;
+    font-family: 'Roboto', 'serif';
+    font-size: 20px;
+    left: 100px;
+    top: 25px;
+    color: rgb(126, 126, 126);
+}
+
+.numbers{
+    font-variant-numeric: tabular-nums;
+}
+
+.keyboard{
+    position: relative;
+    //width: 90%;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+    height: 300px;
+
+    align-self: center;
+    //background-color:  rgb(172, 177, 173);
+    //opacity: 0.2;
+}
+
+.keyboard-buttons-grid{
+
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    //grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    //padding: 5px;
+    grid-gap: 10px;
+    justify-items: center;
+
+}
+
+.buttons{
+    width: 95%;
+    height: 48px;
+    background-color: rgb(16, 16, 51);
+    color: whitesmoke;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 26px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;    
+    border-right: 2px solid rgb(10, 10, 32);
+    border-left: 2px solid rgb(10, 10, 32);
+    border-top: 0px;
+    border-bottom: 0px;
+    //-webkit-transition-duration: 0.2s; /* Safari */
+    transition-duration: 0.2s;
+    box-shadow: 0 5px rgb(10, 10, 32);
+    cursor: pointer;
+    //padding-left: 1em;
+    //padding: 10px;
+}
+
+button:hover {
+    background-color: rgba(16, 16, 51, 0.781);
+    opacity: 0.85;
+    color: rgb(201, 201, 201);
+    //filter: brightness(90%);
+    //color: white;
+  }
+
+button:active {
+    //background-color: #3e8e41;
+    //box-shadow: 0 5px #666;
+    transform: translateY(3px);
+    //transform: translateX(0px);
+    box-shadow: 0 3px rgb(7, 7, 24);
+}
