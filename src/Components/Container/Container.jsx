@@ -8,9 +8,12 @@ export default class Container extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isToggleOn: true,
+            storedResult: null,
             question: '',
-            answer: ''
+            answer: '',
+            currentValue: '0',
+            isNegative: false,
+            hasDecDot: false
         };
 
         // This binding is necessary to make `this` work in the callback
@@ -19,64 +22,219 @@ export default class Container extends React.Component {
 
     /*<Calc_display/>
     <Calc_keyboard/> */
+    removeDuplicateOperators(string){
+        return string
+            .split('')
+            .filter(function(item, pos, self) {
+            return self.indexOf(item) == pos;
+            })
+            .join('');
+       }
 
     handleClick(value,type) {
+        /*String.prototype.replaceAt = function (index, char) {
+            if(char=='') {
+                return this.slice(0,index)+this.substr(index+1 + char.length);
+            } else {
+                return this.substr(0, index) + char + this.substr(index + char.length);
+            }
+        }*/
         if(this.state.question.length < 9){
             if(this.state.question.length > 0 ){
                 if(type == 'inputO'){
                     this.setState(state => ({
                         isToggleOn: !state.isToggleOn,
-                        question: this.state.question.toString() + value
+                        question: this.state.question.toString() + value,
+                        currentValue: this.state.question.toString() + value
                     }));
-                    let op = 0;
-                    let num = 0;
-                    for (let i = 0; i < question.length; i++) {
-                        const e = question[i];
-                        if(e == '%' || e == '/' || e == '+' || e == '-' || e==document.getElementById('times').innerHTML){
-                            op++;
-                        }else{
-                            num++;
-                        }
-                        if(op== 2 && num==1){
-                            question[i] = ' ';
-                            op==0;
+                    let question_ = this.state.question;
+                    for (let i = 0; i < question_.length; i++) {
+                        const e = question_[i];
+                        const ee = question_[i+1];
+
+                        if(e === '%' || e=='/' || e == '+' || e == '-' || e==document.getElementById('times').innerHTML){
+                            if(e !== ee){
+                                this.setState({
+                                    question: question_,
+                                    currentValue: question_
+                                });
+                            }else if(e === ee){
+                                question_[ee] == 'r'
+                               this.setState({
+                                    question: question_,
+                                    currentValue: question_
+                                });
+                            }
+                            /*question_.replaceAt(ee,'p');
+                            this.setState({
+                                question: question_,
+                                currentValue: question_
+                            });*/
                         }
                     }
-                    
-                    //this.setState({question: this.state.question.toString() + buttonValue})
                 }else if(type == 'inputN'){
                     this.setState({
-                        question: this.state.question.toString() + value
+                        question: this.state.question.toString() + value,
+                        currentValue: this.state.question.toString() + value
                     });
+                }else if(type == 'decimal'){
+                    this.setState({
+                        question: this.state.question.toString() + value,
+                        currentValue: this.state.question.toString() + value,
+                        hasDecDot: true
+                    });                
                 }else if(type == 'actionE'){
-                    for (let index = 0; index < question.length; index++) {
-                        
-                        const element = array[index];
-                        
+                    let question_ = this.state.question
+                    if(question_.includes('%')){
+                        if(this.state.hasDecDot == false){
+                            let nums = question_.split('%')
+                            let answer = parseInt(nums[0]) % parseInt(nums[1])
+                            if(answer.length > 9){
+                                this.setState({
+                                    question: '',
+                                    currentValue: 'ERROR'
+                                });
+                            }else{
+                                this.setState({
+                                    question: '',
+                                    currentValue: answer,
+                                    storedResult: answer
+                                });
+                            }  
+                        }else{
+                            this.setState({
+                                question: '',
+                                currentValue: 'ERROR',
+                                hasDecDot: false
+                            });
+                        }
+                    }else if(question_.includes('/')){
+                            let answer = '0';
+                            let nums = question_.split('/')
+                            if(this.state.hasDecDot == false){
+                                answer = parseInt(nums[0]) / parseInt(nums[1])
+                            }else{
+                                answer = parseFloat(nums[0]) / parseFloat(nums[1])
+                            }
+                            let answerL = answer.toFixed(3);
+                            if(answerL.length > 9){
+                                this.setState({
+                                    question: '',
+                                    currentValue: 'ERROR',
+                                    hasDecDot: false
+                                });
+                            }else{
+                                this.setState({
+                                    question: '',
+                                    currentValue: answerL,
+                                    storedResult: answer,
+                                    hasDecDot: false
+                                });
+                            }
+                    }else if(question_.includes(document.getElementById('times').innerHTML)){
+                        let nums = question_.split(document.getElementById('times').innerHTML)
+                        let answer = '0';
+                        if(this.state.hasDecDot == false){
+                            answer = parseInt(nums[0]) * parseInt(nums[1])
+                        }else{
+                            answer = parseFloat(nums[0]) * parseFloat(nums[1])
+                        }
+                        let answerL = answer.toFixed(3);
+                        if(answer.length > 9){
+                            this.setState({
+                                question: '',
+                                currentValue: 'ERROR',
+                                hasDecDot: false
+                            });
+                        }else{
+                            this.setState({
+                                question: '',
+                                currentValue: answerL,
+                                storedResult: answerL,
+                                hasDecDot: false
+                            });
+                        }
+                    }else if(question_.includes('+')){
+                        let nums = question_.split('+')
+                        let answer = '0';
+                        if(this.state.hasDecDot == false){
+                            answer = parseInt(nums[0]) + parseInt(nums[1])
+                        }else{
+                            answer = parseFloat(nums[0]) + parseFloat(nums[1])
+                        }
+                        if(answer.length > 9){
+                            this.setState({
+                                question: '',
+                                currentValue: 'ERROR',
+                                hasDecDot: false
+                            });
+                        }else{
+                            this.setState({
+                                question: '',
+                                currentValue: answer,
+                                storedResult: answer,
+                                hasDecDot: false
+                            });
+                        }
+                    }else if(question_.includes('-')){
+                        let nums = question_.split('-')
+                        let answer = '0';
+                        if(this.state.hasDecDot == false){
+                            answer = parseInt(nums[0]) - parseInt(nums[1])
+                        }else{
+                            answer = parseFloat(nums[0]) - parseFloat(nums[1])
+                        }
+                        if(answer.length > 9){
+                            this.setState({
+                                question: '',
+                                currentValue: 'ERROR',
+                                hasDecDot: false
+                            });
+                        }else{
+                            this.setState({
+                                question: '',
+                                currentValue: answer,
+                                storedResult: answer,
+                                hasDecDot: false
+                            });
+                        }
                     }
                 }else if(type == 'action'){
                     this.setState({
-                        question: ''
+                        question: '',
+                        currentValue: '0'
                     });
+                }else if(type == 'actionPM'){
+                    /*this.setState(state => ({
+                        isNegative: !state.isNegative,
+                       
+                    }));
+                    this.setState(state => ({
+                        question: this.state.question+ this.state.isNegative ? '-' : '',
+                        currentValue: this.state.question.toString() + this.state.question.toString() + value
+                    }));*/
                 }
             }else{
                 if(type == 'inputN'){
                     this.setState({
-                        question: value
+                        question: value,
+                        currentValue: value
+                    });
+                }else if(type == 'action'){
+                    this.setState({
+                        question: '',
+                        currentValue: '0'
                     });
                 }
             }
         }else{
             if(type == 'action'){
                 this.setState({
-                    question: ''
+                    question: '',
+                    currentValue: '0'
                 });
             }
         }
-    }
-
-    handleValues(){
-        
     }
 
     render() { /*<h2>Scroll {this.state.isTop ? 'down' : 'up'}!</h2> */
@@ -86,7 +244,7 @@ export default class Container extends React.Component {
                 <div className='calcName'>
                     Simple Calculator
                 </div>
-                <input className='display numbers' readOnly value={this.state.question}/>
+                <input className='display numbers' readOnly value={this.state.currentValue}/>
                 <div className='keyboard'>
                     <div className='keyboard-buttons-grid'>
                         <button id='AC' onClick={() => this.handleClick(document.getElementById('AC').innerHTML,'action')} className="buttons">AC</button>
