@@ -15,13 +15,10 @@ export default class Container extends React.Component {
             isNegative: false,
             hasDecDot: false
         };
-
         // This binding is necessary to make `this` work in the callback
         this.handleClick = this.handleClick.bind(this);
     }
 
-    /*<Calc_display/>
-    <Calc_keyboard/> */
     removeDuplicateOperators(string){
         return string
             .split('')
@@ -30,6 +27,124 @@ export default class Container extends React.Component {
             })
             .join('');
        }
+
+    handleEqual(){
+        let question_ = this.state.question
+        if(question_.includes('%')){
+            if(this.state.hasDecDot == false){
+                let nums = question_.split('%')
+                let answer = parseInt(nums[0]) % parseInt(nums[1])
+                if(answer.length > 9){
+                    this.setState({
+                        question: '',
+                        currentValue: 'ERROR'
+                    });
+                }else{
+                    this.setState({
+                        question: '',
+                        currentValue: answer,
+                        storedResult: answer
+                    });
+                }  
+            }else{
+                this.setState({
+                    question: '',
+                    currentValue: 'ERROR',
+                    hasDecDot: false
+                });
+            }
+        }else if(question_.includes('/')){
+            let answer = '0';
+            let nums = question_.split('/')
+            if(this.state.hasDecDot == false){
+                answer = parseInt(nums[0]) / parseInt(nums[1])
+            }else{
+                answer = parseFloat(nums[0]) / parseFloat(nums[1])
+            }
+            let answerL = answer.toFixed(3);
+            if(answerL.length > 9){
+                this.setState({
+                    question: '',
+                    currentValue: 'ERROR',
+                    hasDecDot: false
+                });
+            }else{
+                this.setState({
+                    question: '',
+                    currentValue: answerL,
+                    storedResult: answer,
+                    hasDecDot: false
+                });
+            }
+        }else if(question_.includes(document.getElementById('times').innerHTML)){
+            let nums = question_.split(document.getElementById('times').innerHTML)
+            let answer = '0';
+            if(this.state.hasDecDot == false){
+                answer = parseInt(nums[0]) * parseInt(nums[1])
+            }else{
+                answer = parseFloat(nums[0]) * parseFloat(nums[1])
+            }
+            let answerL = answer.toFixed(3);
+            if(answer.length > 9){
+                this.setState({
+                    question: '',
+                    currentValue: 'ERROR',
+                    hasDecDot: false
+                });
+            }else{
+                this.setState({
+                    question: '',
+                    currentValue: answerL,
+                    storedResult: answerL,
+                    hasDecDot: false
+                });
+            }
+        }else if(question_.includes('+')){
+            let nums = question_.split('+')
+            let answer = '0';
+            if(this.state.hasDecDot == false){
+                answer = parseInt(nums[0]) + parseInt(nums[1])
+            }else{
+                answer = parseFloat(nums[0]) + parseFloat(nums[1])
+            }
+            if(answer.length > 9){
+                this.setState({
+                    question: '',
+                    currentValue: 'ERROR',
+                    hasDecDot: false
+                });
+            }else{
+                this.setState({
+                    question: '',
+                    currentValue: answer,
+                    storedResult: answer,
+                    hasDecDot: false
+                });
+            }
+        }else if(question_.includes('-')){
+            let nums = question_.split('-')
+            let answer = '0';
+            if(this.state.hasDecDot == false){
+                answer = parseInt(nums[0]) - parseInt(nums[1])
+            }else{
+                answer = parseFloat(nums[0]) - parseFloat(nums[1])
+            }
+            if(answer.length > 9){
+                this.setState({
+                    question: '',
+                    currentValue: 'ERROR',
+                    hasDecDot: false
+                });
+            }else{
+                this.setState({
+                    question: '',
+                    currentValue: answer,
+                    storedResult: answer,
+                    hasDecDot: false
+                });
+            }
+        }
+    }
 
     handleClick(value,type) {
         /*String.prototype.replaceAt = function (index, char) {
@@ -52,7 +167,7 @@ export default class Container extends React.Component {
                         const e = question_[i];
                         const ee = question_[i+1];
 
-                        if(e === '%' || e=='/' || e == '+' || e == '-' || e==document.getElementById('times').innerHTML){
+                        if(e === '%' || e=='/' || e == '+' || e==document.getElementById('times').innerHTML){
                             if(e !== ee){
                                 this.setState({
                                     question: question_,
@@ -60,7 +175,7 @@ export default class Container extends React.Component {
                                 });
                             }else if(e === ee){
                                 question_[ee] == 'r'
-                               this.setState({
+                                this.setState({
                                     question: question_,
                                     currentValue: question_
                                 });
@@ -70,6 +185,11 @@ export default class Container extends React.Component {
                                 question: question_,
                                 currentValue: question_
                             });*/
+                        }else if( e == '-' ){
+                            this.setState({
+                                question: question_,
+                                currentValue: question_
+                            });
                         }
                     }
                 }else if(type == 'inputN'){
@@ -82,136 +202,21 @@ export default class Container extends React.Component {
                         question: this.state.question.toString() + value,
                         currentValue: this.state.question.toString() + value,
                         hasDecDot: true
-                    });                
+                    });
                 }else if(type == 'actionE'){
-                    let question_ = this.state.question
-                    if(question_.includes('%')){
-                        if(this.state.hasDecDot == false){
-                            let nums = question_.split('%')
-                            let answer = parseInt(nums[0]) % parseInt(nums[1])
-                            if(answer.length > 9){
-                                this.setState({
-                                    question: '',
-                                    currentValue: 'ERROR'
-                                });
-                            }else{
-                                this.setState({
-                                    question: '',
-                                    currentValue: answer,
-                                    storedResult: answer
-                                });
-                            }  
-                        }else{
-                            this.setState({
-                                question: '',
-                                currentValue: 'ERROR',
-                                hasDecDot: false
-                            });
-                        }
-                    }else if(question_.includes('/')){
-                            let answer = '0';
-                            let nums = question_.split('/')
-                            if(this.state.hasDecDot == false){
-                                answer = parseInt(nums[0]) / parseInt(nums[1])
-                            }else{
-                                answer = parseFloat(nums[0]) / parseFloat(nums[1])
-                            }
-                            let answerL = answer.toFixed(3);
-                            if(answerL.length > 9){
-                                this.setState({
-                                    question: '',
-                                    currentValue: 'ERROR',
-                                    hasDecDot: false
-                                });
-                            }else{
-                                this.setState({
-                                    question: '',
-                                    currentValue: answerL,
-                                    storedResult: answer,
-                                    hasDecDot: false
-                                });
-                            }
-                    }else if(question_.includes(document.getElementById('times').innerHTML)){
-                        let nums = question_.split(document.getElementById('times').innerHTML)
-                        let answer = '0';
-                        if(this.state.hasDecDot == false){
-                            answer = parseInt(nums[0]) * parseInt(nums[1])
-                        }else{
-                            answer = parseFloat(nums[0]) * parseFloat(nums[1])
-                        }
-                        let answerL = answer.toFixed(3);
-                        if(answer.length > 9){
-                            this.setState({
-                                question: '',
-                                currentValue: 'ERROR',
-                                hasDecDot: false
-                            });
-                        }else{
-                            this.setState({
-                                question: '',
-                                currentValue: answerL,
-                                storedResult: answerL,
-                                hasDecDot: false
-                            });
-                        }
-                    }else if(question_.includes('+')){
-                        let nums = question_.split('+')
-                        let answer = '0';
-                        if(this.state.hasDecDot == false){
-                            answer = parseInt(nums[0]) + parseInt(nums[1])
-                        }else{
-                            answer = parseFloat(nums[0]) + parseFloat(nums[1])
-                        }
-                        if(answer.length > 9){
-                            this.setState({
-                                question: '',
-                                currentValue: 'ERROR',
-                                hasDecDot: false
-                            });
-                        }else{
-                            this.setState({
-                                question: '',
-                                currentValue: answer,
-                                storedResult: answer,
-                                hasDecDot: false
-                            });
-                        }
-                    }else if(question_.includes('-')){
-                        let nums = question_.split('-')
-                        let answer = '0';
-                        if(this.state.hasDecDot == false){
-                            answer = parseInt(nums[0]) - parseInt(nums[1])
-                        }else{
-                            answer = parseFloat(nums[0]) - parseFloat(nums[1])
-                        }
-                        if(answer.length > 9){
-                            this.setState({
-                                question: '',
-                                currentValue: 'ERROR',
-                                hasDecDot: false
-                            });
-                        }else{
-                            this.setState({
-                                question: '',
-                                currentValue: answer,
-                                storedResult: answer,
-                                hasDecDot: false
-                            });
-                        }
-                    }
+                    this.handleEqual()
                 }else if(type == 'action'){
                     this.setState({
                         question: '',
                         currentValue: '0'
                     });
                 }else if(type == 'actionPM'){
-                    /*this.setState(state => ({
+                   /* this.setState(state => ({
                         isNegative: !state.isNegative,
-                       
                     }));
                     this.setState(state => ({
-                        question: this.state.question+ this.state.isNegative ? '-' : '',
-                        currentValue: this.state.question.toString() + this.state.question.toString() + value
+                        question: this.state.question + this.state.isNegative ? '-' : '+',
+                        currentValue: this.state.question + this.state.isNegative ? '-' : '+'
                     }));*/
                 }
             }else{
@@ -233,6 +238,8 @@ export default class Container extends React.Component {
                     question: '',
                     currentValue: '0'
                 });
+            }else if(type == 'actionE'){
+                this.handleEqual()
             }
         }
     }
